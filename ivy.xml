@@ -295,6 +295,14 @@
       name="mockito-all" 
       rev="${mockito-all.version}" 
       conf="common->default">
-    </dependency> 
+    </dependency>
+    <dependency org="org.apache.zookeeper" name="zookeeper" rev="3.3.3" conf="common->default">
+      <exclude org="log4j" module="log4j"/>
+      <exclude org="javax.jms" module="jms"/>
+      <exclude org="com.sun.jdmk" module="jmxtools"/>
+      <exclude org="com.sun.jmx" module="jmxri"/>
+      <exclude org="javax.mail" module="mail"/>
+    </dependency>
+ 
     </dependencies>
 </ivy-module>
