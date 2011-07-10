@@ -46,29 +46,29 @@ import org.apache.hadoop.metrics.spi.OutputRecord;
 @InterfaceAudience.Public
 @InterfaceStability.Evolving
 public class FileContext extends AbstractMetricsContext {
-    
+
   /* Configuration attribute names */
   @InterfaceAudience.Private
   protected static final String FILE_NAME_PROPERTY = "fileName";
   @InterfaceAudience.Private
   protected static final String PERIOD_PROPERTY = "period";
-    
+
   private File file = null;              // file for metrics to be written to
   private PrintWriter writer = null;
-    
+
   /** Creates a new instance of FileContext */
   @InterfaceAudience.Private
   public FileContext() {}
-    
+
   @InterfaceAudience.Private
   public void init(String contextName, ContextFactory factory) {
     super.init(contextName, factory);
-        
+
     String fileName = getAttribute(FILE_NAME_PROPERTY);
     if (fileName != null) {
       file = new File(fileName);
     }
-        
+
     parseAndSetPeriod(PERIOD_PROPERTY);
   }
 
@@ -83,7 +83,7 @@ public class FileContext extends AbstractMetricsContext {
       return file.getName();
     }
   }
-    
+
   /**
    * Starts or restarts monitoring, by opening in append-mode, the
    * file specified by the <code>fileName</code> attribute,
@@ -92,7 +92,7 @@ public class FileContext extends AbstractMetricsContext {
    */
   @InterfaceAudience.Private
   public void startMonitoring()
-    throws IOException 
+    throws IOException
   {
     if (file == null) {
       writer = new PrintWriter(new BufferedOutputStream(System.out));
@@ -101,7 +101,7 @@ public class FileContext extends AbstractMetricsContext {
     }
     super.startMonitoring();
   }
-    
+
   /**
    * Stops monitoring, closing the file.
    * @see #close()
@@ -109,18 +109,20 @@ public class FileContext extends AbstractMetricsContext {
   @InterfaceAudience.Private
   public void stopMonitoring() {
     super.stopMonitoring();
-        
+
     if (writer != null) {
       writer.close();
       writer = null;
     }
   }
-    
+
   /**
    * Emits a metrics record to a file.
    */
   @InterfaceAudience.Private
   public void emitRecord(String contextName, String recordName, OutputRecord outRec) {
+	writer.print(System.currentTimeMillis());
+	writer.print(" ");
     writer.print(contextName);
     writer.print(".");
     writer.print(recordName);
@@ -141,7 +143,7 @@ public class FileContext extends AbstractMetricsContext {
     }
     writer.println();
   }
-    
+
   /**
    * Flushes the output writer, forcing updates to disk.
    */
